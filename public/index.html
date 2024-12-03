@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+</head>
+<body>
+    <h1>Todo App</h1>
+
+    <form id="todoForm">
+        <input type="text" id="task" placeholder="Enter task" required>
+        <button type="submit">Add Task</button>
+    </form>
+
+    <h2>Todos</h2>
+    <ul id="todoList"></ul>
+
+    <script>
+        // Fetch existing todos on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchTodos();
+        });
+
+        // Fetch todos from API
+        function fetchTodos() {
+            fetch('/todos')
+                .then(response => response.json())
+                .then(data => {
+                    const todoList = document.getElementById('todoList');
+                    todoList.innerHTML = '';
+                    data.forEach(todo => {
+                        const li = document.createElement('li');
+                        li.textContent = todo.task;
+                        todoList.appendChild(li);
+                    });
+                });
+        }
+
+        // Handle form submission to add a new todo
+        document.getElementById('todoForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const task = document.getElementById('task').value;
+            if (task) {
+                fetch('/todos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ task }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Todo added:', data);
+                    fetchTodos(); // Refresh the todo list
+                    document.getElementById('task').value = ''; // Clear input field
+                })
+                .catch(error => {
+                    console.error('Error adding todo:', error);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+

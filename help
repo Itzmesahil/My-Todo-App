@@ -1,0 +1,15 @@
+use npm install whle running
+pm2 stop todo-app
+pm2 startup
+pm2 restart todo-app
+
+creatte database also then create a table
+
+CREATE TABLE IF NOT EXISTS todos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  task VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+lsof -i :3000
